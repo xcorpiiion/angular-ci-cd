@@ -58,7 +58,7 @@ jobs:
         run: npm run test -- --watch=false --browsers=ChromeHeadless
 
       # PASSO 6: O LOOT FINAL (BUILD)
-      # Se o código sobreviveu aos testes e ao fiscal, o Angular compila o TypeScript,
+      # Se o código sobreviveu aos testes e ao  fiscal, o Angular compila o TypeScript,
       # otimiza os arquivos e gera a pasta 'dist' pronta pra ir pro servidor Nginx.
       - name: 🛠️ Forjando o Loot Final (Build do Angular)
         run: npm run build
