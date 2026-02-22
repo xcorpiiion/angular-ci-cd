@@ -1,0 +1,72 @@
+name: Angular CI Pipeline
+
+# ==========================================
+# 1. O GATILHO DA QUEST (Aggro)
+# O robô (GitHub Actions) só acorda e inicia a Dungeon quando
+# você mandar código (push) direto para a branch principal (main).
+# ==========================================
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  batalha-ci:
+    # ==========================================
+    # 2. A ARENA (Servidor)
+    # Aluga um PC temporário zerado rodando a última versão do Linux Ubuntu.
+    # Ele nasce, toma a porrada, roda o script e é destruído no final.
+    # ==========================================
+    runs-on: ubuntu-latest
+
+    # ==========================================
+    # 3. O COMBO DE HABILIDADES (Passo a passo)
+    # ==========================================
+    steps:
+      # PASSO 1: LOAD NO SAVE STATE
+      # O Ubuntu nasce com o HD vazio. Essa ação nativa baixa todo o seu código
+      # do repositório pra dentro dessa máquina virtual.
+      - name: ⬇️ Baixando o Save State (Checkout do código)
+        uses: actions/checkout@v4
+
+      # PASSO 2: EQUIPANDO A ARMA CERTA
+      # O Linux puro não tem Node. Aqui a gente instala o Node.js Level 22
+      # pra garantir que o servidor tenha o mesmo ambiente do seu PC.
+      - name: ⚙️ Equipando o Node.js (Level 22)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.10.0'
+
+      # PASSO 3: COMPRANDO OS ITENS (INVENTÁRIO)
+      # O 'npm ci' (Clean Install) é a versão hardcore do 'npm install'.
+      # Ele lê o package-lock.json e baixa as versões EXATAS dos pacotes,
+      # sem inventar moda ou tentar atualizar nada sozinho. Mais rápido e seguro.
+      - name: 📦 Comprando os itens (Instalando dependências)
+        run: npm ci
+
+      # PASSO 4: O FISCAL (LINTER)
+      # O ESLint vai varrer o código caçando console.log ou variáveis inúteis
+      # usando as nossas regras hardcore. Achou erro? Insta-Kill (o pipeline quebra).
+      - name: 🧐 Passando pelo Fiscal (ESLint)
+        run: npx ng lint
+
+      # PASSO 5: A PORRADARIA (TESTES AUTOMATIZADOS)
+      # Bate no código pra ver se a lógica de HP/Dano funciona.
+      # --watch=false: Impede o teste de ficar rodando num loop infinito.
+      # ChromeHeadless: Roda um Chrome "fantasma" (sem interface gráfica),
+      # já que o servidor Ubuntu não tem monitor.
+      - name: ⚔️ Enfrentando o Boss (Rodando os Testes)
+        run: npm run test -- --watch=false --browsers=ChromeHeadless
+
+      # PASSO 6: O LOOT FINAL (BUILD)
+      # Se o código sobreviveu aos testes e ao fiscal, o Angular compila o TypeScript,
+      # otimiza os arquivos e gera a pasta 'dist' pronta pra ir pro servidor Nginx.
+      - name: 🛠️ Forjando o Loot Final (Build do Angular)
+        run: npm run build
+
+      # ==========================================
+      # PASSO 7: A FORJA FINAL (DOCKER)
+      # O código tá perfeito! Agora o robô lê nosso Dockerfile
+      # e cria a imagem de produção misturando o Angular com o Nginx.
+      # ==========================================
+      - name: 🐳 Criando a Imagem Docker
+        run: docker build -t meu-angular-app .
