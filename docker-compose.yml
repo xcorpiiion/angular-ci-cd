@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  meu-angular:
+    container_name: meu-angular
+    build: . # Manda o Docker ler o Dockerfile que tá nessa mesma pasta
+    ports:
+      - "8080:80" # O portal: Acessa no localhost:8080 e joga pro Nginx no 80

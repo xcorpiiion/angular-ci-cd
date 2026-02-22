@@ -1,0 +1,18 @@
+<div style="text-align: center; margin-top: 50px; font-family: sans-serif;">
+  <h2>Status do Personagem (Treino CI/CD)</h2>
+
+  <h1 [style.color]="hp === 0 ? 'red' : 'green'">
+    HP Atual: {{ hp }}
+  </h1>
+  <p><strong>Status:</strong> {{ status }}</p>
+
+  <div style="gap: 10px; display: flex; justify-content: center;">
+    <button (click)="tomarDano()" [disabled]="hp === 0" style="padding: 10px; cursor: pointer;">
+      ⚔️ Tomar Dano
+    </button>
+
+    <button (click)="usarPocao()" style="padding: 10px; cursor: pointer;">
+      🧪 Usar Poção
+    </button>
+  </div>
+</div>
