@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-treino-ci',
@@ -16,7 +16,6 @@ export class TreinoCi {
     if (this.hp <= 0) {
       this.hp = 0;
       this.status = 'Game Over! Você foi de base.';
-      console.log(this.hp);
     } else {
       this.status = 'Ai! Tomou dano.';
     }
