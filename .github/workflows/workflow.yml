@@ -8,7 +8,8 @@ name: Angular CI Pipeline
 on:
   push:
     branches: [ "master" ]
-
+  pull_request:
+    branches: [ "master" ]
 jobs:
   batalha-ci:
     # ==========================================
